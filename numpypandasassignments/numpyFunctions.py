@@ -70,17 +70,17 @@ joined_arr = np.concatenate((np.array([1, 2]), np.array([3, 4]))) # Dega: [1, 2,
 # Slicing: arr[row_start:row_end, col_start:col_end]
 # Kya karta hai: Kisi badi matrix me se ek chota tukda nikalta hai.
 # Example: 
-# sub_array = arr_2d[2:5, 1:4] # Row 2 se 4 tak, aur Col 1 se 3 tak select hoga.
+sub_array = arr_2d[2:5, 1:4] # Row 2 se 4 tak, aur Col 1 se 3 tak select hoga.
 
 # Fancy Indexing
 # Kya karta hai: Random rows/cols ko select karne ke liye lists of index use karte hain.
 # Example: (Corners nikalne ke liye)
-# corners = arr_2d[[0, 0, -1, -1], [0, -1, 0, -1]] # [row_indices_ki_list], [col_indices_ki_list]
+corners = arr_2d[[0, 0, -1, -1], [0, -1, 0, -1]] # [row_indices_ki_list], [col_indices_ki_list]
 
 # Boolean Indexing (Filtering)
 # Kya karta hai: Condition laga kar array ke elements dhoondhta hai aur modify kar sakta hai.
 # Example:
-# arr_2d[arr_2d > 10] = 10 # Jo bhi elements 10 se bade hain, Numpy automatically unhe 10 bana dega.
+arr_2d[arr_2d > 10] = 10 # Jo bhi elements 10 se bade hain, Numpy automatically unhe 10 bana dega.
 
 
 # ---------------------------------------------------------------------
@@ -90,7 +90,7 @@ joined_arr = np.concatenate((np.array([1, 2]), np.array([3, 4]))) # Dega: [1, 2,
 # np.sum(arr, axis)
 # Kya karta hai: Elements ko jodata (add) hai. Axis=0 matlab Column-wise, Axis=1 matlab Row-wise.
 # Kaise use karein:
-# row_sum = np.sum(arr_2d, axis=1)
+ row_sum = np.sum(arr_2d, axis=1)
 
 # Stats Functions:
 # np.mean() -> Average nikalta hai poore array ka.
@@ -114,16 +114,23 @@ joined_arr = np.concatenate((np.array([1, 2]), np.array([3, 4]))) # Dega: [1, 2,
 
 # np.linalg.det(matrix)
 # Kya karta hai: Matrix ka Determinant value nikalta hai.
+# Example:
+# det = np.linalg.det(np.array([[1, 2], [3, 4]]))
 
 # np.linalg.inv(matrix)
 # Kya karta hai: Matrix ka Inverse nikalta hai (Matrix ^ -1).
+# Example:
+# inverse = np.linalg.inv(np.array([[1, 2], [3, 4]]))
 
 # np.linalg.eigvals(matrix)
 # Kya karta hai: Matrix ke Eigenvalues calculate karta hai.
+# Example:
+# eigenvalues = np.linalg.eigvals(np.array([[1, 2], [3, 4]]))
 
 # np.dot(array1, array2)
 # Kya karta hai: Do matrices ka dot product (Matrix Multiplication) karta hai.
-
+# Example:
+# product = np.dot(np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]]))
 
 # ---------------------------------------------------------------------
 # 6. STRUCTURED ARRAYS (Table ya Database jaisa Data)
