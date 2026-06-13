@@ -11,6 +11,7 @@ def process_data(item):
 # Using ThreadPoolExecutor
 if __name__ == "__main__":
     items_to_process = [1, 2, 3, 4, 5, 6]
+    start_time = time.time()
 
     # Create a pool of 3 worker threads
     with ThreadPoolExecutor(max_workers=3) as executor:
@@ -22,6 +23,9 @@ if __name__ == "__main__":
         # Iterating over the results
         for result in results:
             print(result)
+
+    end_time = time.time()
+    print(f"Time taken: {end_time - start_time}")
 
         
 
