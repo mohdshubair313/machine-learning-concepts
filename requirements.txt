@@ -6,4 +6,6 @@ lxml
 beautifulsoup4
 html5lib
 openpyxl
-sqlite3
+bs4
+scikit-learn
+requests
