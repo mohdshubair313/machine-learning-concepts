@@ -9,3 +9,5 @@ openpyxl
 bs4
 scikit-learn
 requests
+imblearn
+ipykernel
