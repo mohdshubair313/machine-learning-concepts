@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProphetHomes — Property Valuation Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Warm, refined light cream palette (not orange, not purple) */
+            --bg-base: #f7f6f2;
+            --bg-surface: #ffffff;
+            --bg-subtle: #f1efe9;
+            --border-color: #e5e2da;
+            --border-hover: #cfcbbe;
+            --border-focus: #18181b;
+            --text-heading: #18181b;
+            --text-body: #3f3f46;
+            --text-muted: #71717a;
+            --text-subtle: #a1a1aa;
+            --primary: #18181b;
+            --primary-hover: #27272a;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-card: 0 4px 20px -2px rgba(24, 24, 27, 0.05), 0 1px 4px rgba(0, 0, 0, 0.02);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navigation */
+        .header {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.3px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--bg-subtle);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            letter-spacing: 0.3px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-pill {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #15803d;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 4px 12px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        .api-link {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .api-link:hover {
+            color: var(--text-heading);
+            border-color: var(--border-hover);
+            background: var(--bg-subtle);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+            width: 100%;
+        }
+
+        .page-intro {
+            margin-bottom: 2rem;
+        }
+
+        .page-intro h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.4rem;
+        }
+
+        .page-intro p {
+            color: var(--text-muted);
+            font-size: 0.975rem;
+            max-width: 620px;
+        }
+
+        /* Quick Presets Bar */
+        .preset-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preset-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 0.25rem;
+        }
+
+        .preset-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-body);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .preset-btn:hover {
+            border-color: var(--text-heading);
+            background: var(--bg-subtle);
+        }
+
+        .preset-btn.btn-reset {
+            color: var(--text-muted);
+            border-style: dashed;
+        }
+
+        /* Two-Column Grid */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 992px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .section-header {
+            font-size: 0.825rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin: 1.75rem 0 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--bg-subtle);
+        }
+
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .inputs-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .inputs-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .field label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .field label .unit {
+            color: var(--text-subtle);
+            font-weight: 500;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            color: var(--text-heading);
+            font-size: 0.9rem;
+            font-weight: 500;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.08);
+        }
+
+        .btn-submit {
+            width: 100%;
+            margin-top: 2rem;
+            padding: 12px 20px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Sticky Output Panel */
+        .output-panel {
+            position: sticky;
+            top: 5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .result-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .result-subtitle {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-display {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-words {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-bottom: 1.75rem;
+        }
+
+        .meta-list {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .meta-item .meta-label {
+            color: var(--text-muted);
+        }
+
+        .meta-item .meta-val {
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        .note-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .note-card strong {
+            color: var(--text-heading);
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.825rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="/" class="brand-title">
+            ProphetHomes <span class="brand-tag">v1.0</span>
+        </a>
+        <div class="nav-right">
+            <div class="status-pill">
+                <span class="status-dot"></span> Algo used: RidgeCV
+            </div>
+            <a href="/docs" target="_blank" class="api-link">API Docs</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Intro -->
+        <div class="page-intro">
+            <h1>Property Valuation Calculator</h1>
+            <p>Estimates market valuation based on 20 property parameters using trained Ridge regression and feature
+                standardization.</p>
+        </div>
+
+        <!-- Presets -->
+        <div class="preset-bar">
+            <span class="preset-title">Presets:</span>
+            <button class="preset-btn" onclick="applyPreset('median')">Suburban Home</button>
+            <button class="preset-btn" onclick="applyPreset('luxury')">Luxury Villa</button>
+            <button class="preset-btn" onclick="applyPreset('starter')">Compact Home</button>
+            <button class="preset-btn btn-reset" onclick="resetForm()">Reset</button>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="grid-layout">
+            <!-- Form Area -->
+            <div class="form-card">
+                <form id="predictionForm">
+
+                    <!-- 01 / Basic Specs -->
+                    <div class="section-header">01 — Basic Specifications</div>
+                    <div class="inputs-row">
+                        <div class="field">
+                            <label for="bedrooms">Bedrooms <span class="unit">qty</span></label>
+                            <input type="number" id="bedrooms" name="bedrooms" min="1" max="20" step="1" value="3"
+                                required>
+                        </div>
+                        <div class="field">
+                            <label for="bathrooms">Bathrooms <span class="unit">qty</span></label>
+                            <input type="number" id="bathrooms" name="bathrooms" min="0.5" max="10" step="0.25"
+                                value="2.25" required>
+                        </div>
+                        <div class="field">
+                            <label for="floors">Floors <span class="unit">stories</span></label>
+                            <input type="number" id="floors" name="floors" min="1" max="4" step="0.5" value="1.5"
+                                required>
+                        </div>
+                        <div class="field">
+                            <label for="views">View Rating <span class="unit">0 to 4</span></label>
+                            <select id="views" name="views">
+                                <option value="0" selected>0 — None</option>
+                                <option value="1">1 — Fair</option>
+                                <option value="2">2 — Average</option>
+                                <option value="3">3 — Good</option>
+                                <option value="4">4 — Panoramic</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="condition">Condition <span class="unit">1 to 5</span></label>
+                            <select id="condition" name="condition">
+                                <option value="1">1 — Poor</option>
+                                <option value="2">2 — Fair</option>
+                                <option value="3" selected>3 — Good</option>
+                                <option value="4">4 — Very Good</option>
+                                <option value="5">5 — Excellent</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="grade">Build Grade <span class="unit">1 to 13</span></label>
+                            <select id="grade" name="grade">
+                                <option value="5">Grade 5 — Economy</option>
+                                <option value="6">Grade 6 — Low Standard</option>
+                                <option value="7" selected>Grade 7 — Average Standard</option>
+                                <option value="8">Grade 8 — Good Custom</option>
+                                <option value="9">Grade 9 — High Architecture</option>
+                                <option value="10">Grade 10 — Deluxe Luxury</option>
+                                <option value="11">Grade 11 — Mansion Elite</option>
+                                <option value="12">Grade 12 — Prime Royal</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 02 / Dimensions -->
+                    <div class="section-header">02 — Dimensions & Living Space</div>
+                    <div class="inputs-row">
+                        <div class="field">
+                            <label for="living_area">Living Area <span class="unit">sq. ft.</span></label>
+                            <input type="number" id="living_area" name="living_area" min="300" max="15000" step="10"
+                                value="1930" required>
+                        </div>
+                        <div class="field">
+                            <label for="lot_area">Lot Size <span class="unit">sq. ft.</span></label>
+                            <input type="number" id="lot_area" name="lot_area" min="400" max="100000" step="50"
+                                value="7620" required>
+                        </div>
+                        <div class="field">
+                            <label for="area_excluding_basement">Above-Ground Area <span class="unit">sq.
+                                    ft.</span></label>
+                            <input type="number" id="area_excluding_basement" name="area_excluding_basement" min="300"
+                                max="15000" step="10" value="1580" required>
+                        </div>
+                        <div class="field">
+                            <label for="area_basement">Basement Area <span class="unit">sq. ft.</span></label>
+                            <input type="number" id="area_basement" name="area_basement" min="0" max="5000" step="10"
+                                value="0" required>
+                        </div>
+                        <div class="field">
+                            <label for="living_area_renov">Renovated Living Space <span class="unit">sq.
+                                    ft.</span></label>
+                            <input type="number" id="living_area_renov" name="living_area_renov" min="300" max="15000"
+                                step="10" value="1850" required>
+                        </div>
+                        <div class="field">
+                            <label for="lot_area_renov">Renovated Lot Size <span class="unit">sq. ft.</span></label>
+                            <input type="number" id="lot_area_renov" name="lot_area_renov" min="400" max="100000"
+                                step="50" value="7620" required>
+                        </div>
+                    </div>
+
+                    <!-- 03 / Location -->
+                    <div class="section-header">03 — Location & Coordinates</div>
+                    <div class="inputs-row">
+                        <div class="field">
+                            <label for="postal_code">Postal Code <span class="unit">Zone ID</span></label>
+                            <input type="number" id="postal_code" name="postal_code" value="122032" required>
+                        </div>
+                        <div class="field">
+                            <label for="schools_nearby">Schools in Vicinity <span class="unit">qty</span></label>
+                            <input type="number" id="schools_nearby" name="schools_nearby" min="0" max="5" value="2"
+                                required>
+                        </div>
+                        <div class="field">
+                            <label for="distance_airport">Airport Distance <span class="unit">km</span></label>
+                            <input type="number" id="distance_airport" name="distance_airport" min="10" max="100"
+                                value="65" required>
+                        </div>
+                        <div class="field">
+                            <label for="waterfront">Waterfront Access <span class="unit">Status</span></label>
+                            <select id="waterfront" name="waterfront">
+                                <option value="0" selected>No</option>
+                                <option value="1">Yes (Direct View)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="latitude">Latitude <span class="unit">deg</span></label>
+                            <input type="number" id="latitude" name="latitude" step="0.0001" value="52.8064" required>
+                        </div>
+                        <div class="field">
+                            <label for="longitude">Longitude <span class="unit">deg</span></label>
+                            <input type="number" id="longitude" name="longitude" step="0.0001" value="-114.421"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- 04 / Age -->
+                    <div class="section-header">04 — Construction & History</div>
+                    <div class="inputs-row">
+                        <div class="field">
+                            <label for="built_year">Year Built <span class="unit">YYYY</span></label>
+                            <input type="number" id="built_year" name="built_year" min="1900" max="2026" value="1975"
+                                required>
+                        </div>
+                        <div class="field">
+                            <label for="renovation_year">Year Renovated <span class="unit">0 if never</span></label>
+                            <input type="number" id="renovation_year" name="renovation_year" min="0" max="2026"
+                                value="0" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <span class="spinner" id="spinner"></span>
+                        <span id="btnText">Calculate Valuation</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sticky Result Card -->
+            <div class="output-panel">
+                <div class="result-card">
+                    <div class="result-subtitle">Estimated Market Valuation</div>
+                    <div class="price-display" id="priceDisplay">₹ 4,01,633</div>
+                    <div class="price-words" id="priceWords">₹ 4.02 Lakhs</div>
+
+                    <div class="meta-list">
+                        <div class="meta-item">
+                            <span class="meta-label">Model Pipeline</span>
+                            <span class="meta-val">RidgeCV (L2 Reg)</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Evaluation Metric</span>
+                            <span class="meta-val">R² = 0.695 (69.5%)</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Mean Abs. Error</span>
+                            <span class="meta-val">± ₹1.24 Lakhs</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Feature Scaler</span>
+                            <span class="meta-val">StandardScaler</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <strong>Pipeline Notice:</strong> Inputs are transformed through your fitted <code>scaler.pkl</code>
+                    before matrix evaluation in <code>House_Price_model.pkl</code>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        ProphetHomes Valuation Engine • Machine Learning Project Deployment
+    </footer>
+
+    <script>
+        const form = document.getElementById('predictionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btnText');
+        const priceDisplay = document.getElementById('priceDisplay');
+        const priceWords = document.getElementById('priceWords');
+
+        const presets = {
+            median: {
+                bedrooms: 3, bathrooms: 2.25, floors: 1.5, views: 0, condition: 3, grade: 7,
+                living_area: 1930, lot_area: 7620, area_excluding_basement: 1580, area_basement: 0,
+                living_area_renov: 1850, lot_area_renov: 7620, postal_code: 122032, schools_nearby: 2,
+                distance_airport: 65, latitude: 52.8064, longitude: -114.421, waterfront: 0,
+                built_year: 1975, renovation_year: 0
+            },
+            luxury: {
+                bedrooms: 5, bathrooms: 4.5, floors: 2.0, views: 4, condition: 5, grade: 11,
+                living_area: 5400, lot_area: 25000, area_excluding_basement: 4200, area_basement: 1200,
+                living_area_renov: 4800, lot_area_renov: 22000, postal_code: 122004, schools_nearby: 3,
+                distance_airport: 52, latitude: 52.8852, longitude: -114.468, waterfront: 1,
+                built_year: 2008, renovation_year: 2018
+            },
+            starter: {
+                bedrooms: 2, bathrooms: 1.0, floors: 1.0, views: 0, condition: 3, grade: 6,
+                living_area: 980, lot_area: 4000, area_excluding_basement: 980, area_basement: 0,
+                living_area_renov: 1100, lot_area_renov: 4000, postal_code: 122018, schools_nearby: 1,
+                distance_airport: 75, latitude: 52.7076, longitude: -114.519, waterfront: 0,
+                built_year: 1960, renovation_year: 0
+            }
+        };
+
+        function applyPreset(name) {
+            const p = presets[name];
+            if (!p) return;
+            for (const key in p) {
+                const el = document.getElementById(key);
+                if (el) el.value = p[key];
+            }
+            fetchPrediction();
+        }
+
+        function resetForm() {
+            const input = form.querySelectorAll('input');
+            input.forEach(input => input.value = "");
+            // 2. Dropdown (select) ko wapas pehle option par le aao
+            const selects = form.querySelectorAll('select');
+            selects.forEach(select => select.selectedIndex = 0);
+            // 3. Right side wale price card ko bhi reset kar do
+            priceDisplay.textContent = '₹ --';
+            priceWords.textContent = 'Fill details and click calculate';
+
+        }
+
+        async function fetchPrediction() {
+            submitBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.textContent = 'Calculating...';
+
+            const payload = {
+                bedrooms: parseFloat(document.getElementById('bedrooms').value),
+                bathrooms: parseFloat(document.getElementById('bathrooms').value),
+                living_area: parseFloat(document.getElementById('living_area').value),
+                lot_area: parseFloat(document.getElementById('lot_area').value),
+                floors: parseFloat(document.getElementById('floors').value),
+                waterfront: parseInt(document.getElementById('waterfront').value),
+                views: parseInt(document.getElementById('views').value),
+                condition: parseInt(document.getElementById('condition').value),
+                grade: parseInt(document.getElementById('grade').value),
+                area_excluding_basement: parseFloat(document.getElementById('area_excluding_basement').value),
+                area_basement: parseFloat(document.getElementById('area_basement').value),
+                built_year: parseInt(document.getElementById('built_year').value),
+                renovation_year: parseInt(document.getElementById('renovation_year').value),
+                postal_code: parseInt(document.getElementById('postal_code').value),
+                latitude: parseFloat(document.getElementById('latitude').value),
+                longitude: parseFloat(document.getElementById('longitude').value),
+                living_area_renov: parseFloat(document.getElementById('living_area_renov').value),
+                lot_area_renov: parseFloat(document.getElementById('lot_area_renov').value),
+                schools_nearby: parseInt(document.getElementById('schools_nearby').value),
+                distance_airport: parseFloat(document.getElementById('distance_airport').value)
+            };
+
+            try {
+                const res = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    priceDisplay.textContent = data.formatted_price;
+                    priceWords.textContent = data.price_in_lakhs;
+                } else {
+                    alert('Error: ' + (data.message || 'Server error'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Connection error with FastAPI.');
+            } finally {
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = 'Calculate Valuation';
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetchPrediction();
+        });
+    </script>
+</body>
+
+</html>
